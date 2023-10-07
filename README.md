@@ -4,4 +4,4 @@
 會起這個念頭主要是想把自己搓的yt播放清單下載器轉成手機用，省的每次都要在電腦上用完再摳過去，而[這位大老寫的yt library](https://github.com/Tyrrrz/YoutubeExplode)又是我用過的最穩的，
 於是就想到可以出成一個api放到網路上的免費服務，這樣以後搓app的時候就可以直接用了差低
 
-這次有用docker包container，主要是大老的yt library有用到ffmpeg，怕網路上的免費服務無法提供，只是這樣就要找能用docker deploy的服務了
+這次有用docker包container，主要是大老的yt library的其中一部份(Converter)有用到ffmpeg，怕網路上的免費服務無法提供，只是這樣就要找能用docker deploy的服務了
