@@ -29,8 +29,8 @@ app.MapGet("/download/{videoId}/{custName?}", async (string videoId, string? cus
         // https://blog.miniasp.com/post/2007/10/28/New-operator-found-in-CSharp-question-mark
         var vtitle = custName ?? removeSpecialChar(vinfo.Title);
 
-        var videolist = await yt.Videos.Streams.GetManifestAsync(url);
-        var videoInfo = videolist.GetAudioOnlyStreams().GetWithHighestBitrate();
+        var videotManifest = await yt.Videos.Streams.GetManifestAsync(url);
+        var videoInfo = videotManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
 
         var res = await yt.Videos.Streams.GetAsync(videoInfo);
 
