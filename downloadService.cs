@@ -1,0 +1,43 @@
+using System.ComponentModel;
+using System.Web;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using YoutubeExplode;
+using YoutubeExplode.Videos.Streams;
+
+class downloadService
+{
+    public record DownloadServiceResult(string fileName, Stream fileStream);
+
+    static string removeSpecialChar(string input)
+    {
+        foreach (var item in new string[] { @"*", @"/", "\n", "\"", "|", ":", "?" })
+        {
+            input = input.Replace(item, "");
+        }
+
+        return input;
+    }
+
+    public static async Task<DownloadServiceResult> download(string url, string? custName)
+    {
+        var yt = new YoutubeClient();
+        var vinfo = await yt.Videos.GetAsync(url);
+        // https://blog.miniasp.com/post/2007/10/28/New-operator-found-in-CSharp-question-mark
+        var vtitle = custName ?? removeSpecialChar(vinfo.Title);
+
+        var videotManifest = await yt.Videos.Streams.GetManifestAsync(url);
+        var videoInfo = videotManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
+
+        var res = await yt.Videos.Streams.GetAsync(videoInfo);
+
+        // https://learn.microsoft.com/zh-tw/dotnet/api/system.web.httputility.urlencode
+        // var filename = @$"{HttpUtility.UrlEncode(vtitle)}.mp3".Replace("+", "%20").Replace("%2b", "+");
+        var filename = @$"{vtitle}.mp3";
+
+        return new DownloadServiceResult(filename, res);
+    }
+}
