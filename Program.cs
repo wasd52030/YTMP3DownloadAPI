@@ -1,9 +1,17 @@
 using System.ComponentModel;
+using Microsoft.AspNetCore.HttpLogging;
 using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// swagger service
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
+
+// Http request log service
+builder.Services.AddHttpLogging(logging=>{
+    logging.LoggingFields=HttpLoggingFields.Request;
+});
 
 var app = builder.Build();
 app.UseSwagger();
@@ -18,9 +26,8 @@ app.UseSwaggerUI(options =>
 async Task<IResult> downloadWithCustomName(
     [SwaggerParameter("youtube video id")]
     string videoId,
-    [DefaultValue(null)]
     [SwaggerParameter("custom file name",Required =false)]
-    string? custName
+    string custName
 )
 {
     var url = $"https://www.youtube.com/watch?v={videoId}";
