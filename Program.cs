@@ -14,40 +14,16 @@ builder.Services.AddHttpLogging(logging=>{
 });
 
 var app = builder.Build();
+
+app.UseHttpLogging();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = string.Empty;
+    options.DocumentTitle="youtube mp3 download api document";
 });
 
-// async  downloadService(){}
-
-async Task<IResult> downloadWithCustomName(
-    [SwaggerParameter("youtube video id")]
-    string videoId,
-    [SwaggerParameter("custom file name",Required =false)]
-    string custName
-)
-{
-    var url = $"https://www.youtube.com/watch?v={videoId}";
-
-    try
-    {
-        var serviceRes = await downloadService.download(url, custName);
-
-        return Results.File(
-            serviceRes.fileStream,
-            contentType: "audio/mp3",
-            fileDownloadName: serviceRes.fileName,
-            enableRangeProcessing: true
-        );
-    }
-    catch (System.Exception e)
-    {
-        throw;
-    }
-}
 
 async Task<IResult> downloadWithvideoName(
     [SwaggerParameter("youtube video id")]
@@ -72,6 +48,34 @@ async Task<IResult> downloadWithvideoName(
         throw;
     }
 }
+
+
+async Task<IResult> downloadWithCustomName(
+    [SwaggerParameter("youtube video id")]
+    string videoId,
+    [SwaggerParameter("custom file name")]
+    string custName
+)
+{
+    var url = $"https://www.youtube.com/watch?v={videoId}";
+
+    try
+    {
+        var serviceRes = await downloadService.download(url, custName);
+
+        return Results.File(
+            serviceRes.fileStream,
+            contentType: "audio/mp3",
+            fileDownloadName: serviceRes.fileName,
+            enableRangeProcessing: true
+        );
+    }
+    catch (System.Exception e)
+    {
+        throw;
+    }
+}
+
 
 app.MapGet("/download/{videoId}", downloadWithvideoName);
 app.MapGet("/download/{videoId}/{custName?}", downloadWithCustomName);
