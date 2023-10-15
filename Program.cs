@@ -78,6 +78,6 @@ async Task<IResult> downloadWithCustomName(
 
 
 app.MapGet("/download/{videoId}", downloadWithvideoName);
-app.MapGet("/download/{videoId}/{custName?}", downloadWithCustomName);
+app.MapGet("/download/{videoId}/{custName}", downloadWithCustomName);
 
 app.Run();
