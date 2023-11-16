@@ -1,7 +1,14 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Swashbuckle.AspNetCore.Annotations;
+using YTMP3DownloadAPI.Logger;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddApplicationLogger();
+});
 
 // swagger service
 builder.Services.AddEndpointsApiExplorer();
@@ -14,7 +21,8 @@ builder.Services.AddHttpLogging(logging=>{
 
 var app = builder.Build();
 
-app.UseHttpLogging();
+app.UseRequestLog();
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
