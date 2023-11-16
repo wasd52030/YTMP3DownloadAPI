@@ -16,6 +16,8 @@ COPY --from=build-env /app/out .
 EXPOSE 80
 ENTRYPOINT ["dotnet", "YTMP3DownloadAPI.dll"]
 
+# build container
+# docker build -t yt-mp3download-api .
 
 # 啟動container
 # docker run -d --name yt-mp3download-api -p 127.0.0.1:8082:80 yt-mp3download-api
