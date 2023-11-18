@@ -33,15 +33,13 @@ app.UseSwaggerUI(options =>
 
 
 async Task<IResult> downloadWithvideoName(
-    [SwaggerParameter("youtube video id")]
-    string videoId
+    [SwaggerParameter("youtube影片網址")]
+    string videoUrl
 )
 {
-    var url = $"https://www.youtube.com/watch?v={videoId}";
-
     try
     {
-        var serviceRes = await downloadService.download(url, null);
+        var serviceRes = await downloadService.download(videoUrl, null);
 
         return Results.File(
             serviceRes.fileStream,
@@ -50,7 +48,7 @@ async Task<IResult> downloadWithvideoName(
             enableRangeProcessing: true
         );
     }
-    catch (System.Exception e)
+    catch (System.Exception)
     {
         throw;
     }
@@ -58,17 +56,16 @@ async Task<IResult> downloadWithvideoName(
 
 
 async Task<IResult> downloadWithCustomName(
-    [SwaggerParameter("youtube video id")]
-    string videoId,
-    [SwaggerParameter("custom file name")]
+    [SwaggerParameter("youtube影片網址")]
+    string videoUrl,
+    [SwaggerParameter("自訂檔名")]
     string custName
 )
 {
-    var url = $"https://www.youtube.com/watch?v={videoId}";
 
     try
     {
-        var serviceRes = await downloadService.download(url, custName);
+        var serviceRes = await downloadService.download(videoUrl, custName);
 
         return Results.File(
             serviceRes.fileStream,
@@ -77,14 +74,14 @@ async Task<IResult> downloadWithCustomName(
             enableRangeProcessing: true
         );
     }
-    catch (System.Exception e)
+    catch (System.Exception)
     {
         throw;
     }
 }
 
 
-app.MapGet("/download/{videoId}", downloadWithvideoName);
-app.MapGet("/download/{videoId}/{custName}", downloadWithCustomName);
+app.MapGet("/download/{videoUrl}", downloadWithvideoName);
+app.MapGet("/download/{videoUrl}/{custName}", downloadWithCustomName);
 
 app.Run();
