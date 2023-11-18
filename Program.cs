@@ -1,4 +1,6 @@
+using System.Web;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using YTMP3DownloadAPI.Logger;
 
@@ -39,6 +41,9 @@ async Task<IResult> downloadWithvideoName(
 {
     try
     {
+        // parse url in route param videourl
+        videoUrl=HttpUtility.UrlDecode(videoUrl);
+        
         var serviceRes = await downloadService.download(videoUrl, null);
 
         return Results.File(
@@ -65,6 +70,9 @@ async Task<IResult> downloadWithCustomName(
 
     try
     {
+        // parse url in route param videourl
+        videoUrl=HttpUtility.UrlDecode(videoUrl);
+        
         var serviceRes = await downloadService.download(videoUrl, custName);
 
         return Results.File(
