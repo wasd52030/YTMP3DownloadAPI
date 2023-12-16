@@ -17,8 +17,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
 
 // Http request log service
-builder.Services.AddHttpLogging(logging=>{
-    logging.LoggingFields=HttpLoggingFields.Request;
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.Request;
 });
 
 var app = builder.Build();
@@ -30,7 +31,7 @@ app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = string.Empty;
-    options.DocumentTitle="youtube mp3 download api document";
+    options.DocumentTitle = "youtube mp3 download api document";
 });
 
 
@@ -42,8 +43,8 @@ async Task<IResult> downloadWithvideoName(
     try
     {
         // parse url in route param videourl
-        videoUrl=HttpUtility.UrlDecode(videoUrl);
-        
+        videoUrl = HttpUtility.UrlDecode(videoUrl);
+
         var serviceRes = await downloadService.download(videoUrl, null);
 
         return Results.File(
@@ -71,8 +72,8 @@ async Task<IResult> downloadWithCustomName(
     try
     {
         // parse url in route param videourl
-        videoUrl=HttpUtility.UrlDecode(videoUrl);
-        
+        videoUrl = HttpUtility.UrlDecode(videoUrl);
+
         var serviceRes = await downloadService.download(videoUrl, custName);
 
         return Results.File(
@@ -91,5 +92,6 @@ async Task<IResult> downloadWithCustomName(
 
 app.MapGet("/download/{videoUrl}", downloadWithvideoName);
 app.MapGet("/download/{videoUrl}/{custName}", downloadWithCustomName);
+app.MapGet("/a", () => new { status = 200, message = "動了，它動了" });
 
 app.Run();
