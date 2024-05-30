@@ -25,24 +25,25 @@ var app = builder.Build();
 
 app.UseRequestLog();
 
+// http://localhost:5195/swagger/index.html
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
+    // options.RoutePrefix = string.Empty;
     options.DocumentTitle = "youtube mp3 download api document";
 });
 
 
 async Task<IResult> downloadWithvideoName(
-    [SwaggerParameter("youtube影片網址")]
-    string videoUrl
+    [SwaggerParameter("youtube影片ID")]
+    string videoID
 )
 {
     try
     {
         // parse url in route param videourl
-        videoUrl = HttpUtility.UrlDecode(videoUrl);
+        var videoUrl = HttpUtility.UrlDecode($"https://www.youtube.com/watch?v={videoID}");
 
         var serviceRes = await downloadService.download(videoUrl, null, null);
 
@@ -61,8 +62,8 @@ async Task<IResult> downloadWithvideoName(
 
 
 async Task<IResult?> downloadWithCustomName(
-    [SwaggerParameter("youtube影片網址")]
-    string videoUrl,
+    [SwaggerParameter("youtube影片ID")]
+    string videoID,
     [SwaggerParameter("自訂檔名")]
     string custName,
     [SwaggerParameter("comment")]
@@ -73,7 +74,7 @@ async Task<IResult?> downloadWithCustomName(
     try
     {
         // parse url in route param videourl
-        videoUrl = HttpUtility.UrlDecode(videoUrl);
+        var videoUrl = HttpUtility.UrlDecode($"https://www.youtube.com/watch?v={videoID}");
 
         var serviceRes = await downloadService.download(videoUrl, custName, comment);
         var fileDownloadName = serviceRes.fileName.Split("]").Last().Trim();
@@ -91,9 +92,9 @@ async Task<IResult?> downloadWithCustomName(
     }
 }
 
-
-app.MapGet("/download/{videoUrl}", downloadWithvideoName);
-app.MapGet("/download/{videoUrl}/{custName}", downloadWithCustomName);
+// TODO: 做一個簡易的前端對外
+app.MapGet("/download/{videoID}", downloadWithvideoName);
+app.MapGet("/download/{videoID}/{custName}", downloadWithCustomName);
 app.MapGet("/a", () => new { status = 200, message = "動了，它動了" });
 
 app.Run();
