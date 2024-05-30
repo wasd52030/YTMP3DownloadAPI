@@ -15,7 +15,7 @@ class downloadService
         return input;
     }
 
-    public static async Task<DownloadServiceResult> download(string url, string? custName)
+    public static async Task<DownloadServiceResult> download(string url, string? custName, string? comment)
     {
         var yt = new YoutubeClient();
         var vinfo = await yt.Videos.GetAsync(url);
@@ -23,13 +23,14 @@ class downloadService
         var vtitle = custName ?? removeSpecialChar(vinfo.Title);
 
         var videotManifest = await yt.Videos.Streams.GetManifestAsync(url);
-        var videoInfo = videotManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
-
-        var res = await yt.Videos.Streams.GetAsync(videoInfo);
+        var videoInfo = videotManifest.GetAudioOnlyStreams()
+                                      .GetWithHighestBitrate();
 
         // https://learn.microsoft.com/zh-tw/dotnet/api/system.web.httputility.urlencode
         // var filename = @$"{HttpUtility.UrlEncode(vtitle)}.mp3".Replace("+", "%20").Replace("%2b", "+");
         var filename = @$"{vtitle}.mp3";
+
+        var res = (await videoInfo.GetMp3Stream()).AnnotateMp3Tag(filename, comment);
 
         return new DownloadServiceResult(filename, res);
     }

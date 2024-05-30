@@ -1,6 +1,5 @@
 using System.Web;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using YTMP3DownloadAPI.Logger;
 
@@ -45,7 +44,7 @@ async Task<IResult> downloadWithvideoName(
         // parse url in route param videourl
         videoUrl = HttpUtility.UrlDecode(videoUrl);
 
-        var serviceRes = await downloadService.download(videoUrl, null);
+        var serviceRes = await downloadService.download(videoUrl, null, null);
 
         return Results.File(
             serviceRes.fileStream,
@@ -61,11 +60,13 @@ async Task<IResult> downloadWithvideoName(
 }
 
 
-async Task<IResult> downloadWithCustomName(
+async Task<IResult?> downloadWithCustomName(
     [SwaggerParameter("youtube影片網址")]
     string videoUrl,
     [SwaggerParameter("自訂檔名")]
-    string custName
+    string custName,
+    [SwaggerParameter("comment")]
+    string? comment
 )
 {
 
@@ -74,16 +75,17 @@ async Task<IResult> downloadWithCustomName(
         // parse url in route param videourl
         videoUrl = HttpUtility.UrlDecode(videoUrl);
 
-        var serviceRes = await downloadService.download(videoUrl, custName);
+        var serviceRes = await downloadService.download(videoUrl, custName, comment);
+        var fileDownloadName = serviceRes.fileName.Split("]").Last().Trim();
 
         return Results.File(
             serviceRes.fileStream,
             contentType: "audio/mp3",
-            fileDownloadName: serviceRes.fileName,
+            fileDownloadName: fileDownloadName,
             enableRangeProcessing: true
         );
     }
-    catch (System.Exception)
+    catch (System.Exception e)
     {
         throw;
     }
