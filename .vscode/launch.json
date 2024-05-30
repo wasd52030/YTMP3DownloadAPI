@@ -2,10 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C#: YTMP3DownloadAPI [Default Configuration]",
+            "name": "C#: YTMP3DownloadAPI Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}\\YTMP3DownloadAPI.csproj",
+            "projectPath": "${workspaceFolder}\\YTMP3DownloadAPI.csproj"
         }
+        
     ]
 }
