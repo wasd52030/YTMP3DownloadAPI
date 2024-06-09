@@ -28,8 +28,6 @@ public static class Extensions
         string pattern = @"\[(.*?)\]";
         var matches = Regex.Matches(title, pattern);
 
-        var res = new MemoryStream();
-
         try
         {
             using var mp3 = TagLib.File.Create(new StreamFileAbstraction(title, stream));
