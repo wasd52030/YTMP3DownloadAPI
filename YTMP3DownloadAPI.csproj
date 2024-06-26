@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishDirName>dist</PublishDirName>
+		<PublishDir>$(ProjectDir).\$(PublishDirName)</PublishDir>
+	</PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
