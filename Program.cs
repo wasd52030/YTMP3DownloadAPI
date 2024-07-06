@@ -50,9 +50,9 @@ async Task<IResult> downloadWithvideoName(
         return Results.File(
             serviceRes.fileStream,
             contentType: "audio/mp3",
-            fileDownloadName: serviceRes.fileName,
-            enableRangeProcessing: true
+            fileDownloadName: serviceRes.fileName
         );
+
     }
     catch (System.Exception)
     {
@@ -82,8 +82,7 @@ async Task<IResult?> downloadWithCustomName(
         return Results.File(
             serviceRes.fileStream,
             contentType: "audio/mp3",
-            fileDownloadName: fileDownloadName,
-            enableRangeProcessing: true
+            fileDownloadName: fileDownloadName
         );
     }
     catch (System.Exception e)
